@@ -16,6 +16,10 @@
 */
 
 class Vector3 extends ENVector {
+    constructor(x, y, z) {
+        super([x, y, z]);
+    }
+
     copy() {
         let arr = this.val;
         return new Vector3(arr);
@@ -86,9 +90,9 @@ class Vector3 extends ENVector {
 
 
     cross(vector) {
-        let x = this.val[2] * vector.val[3] - this.val[3] * vector.val[2];
-        let y = this.val[3] * vector.val[1] - this.val[1] * vector.val[3];
-        let z = this.val[1] * vector.val[2] - this.val[2] * vector.val[1];
+        let x = this.y() * vector.z() - this.z() * vector.y();
+        let y = this.z() * vector.x() - this.x() * vector.z();
+        let z = this.x() * vector.y() - this.y() * vector.x();
         return new Vector3([x, y, z]);
     }
 

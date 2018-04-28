@@ -83,10 +83,19 @@ let opp = function(vector) {
     return vector.cOpp();
 };
 
-console.log("***NPMAtrix TESTS***");
+console.log("***NField TESTS***");
 
 console.log("Field f : x -> -x. Value in vector 1");
-let f = new NField(opp, 3);
+let f = new NField(opp, 3, 3);
 f.value(vector1).print();
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//Vector3 Test
+
+let vector3D1 = new Vector3(1, 2, 3);
+let vector3D2 = new Vector3(10, 5, 10);
+
+console.log("***Vector3 TESTS***");
+vector1.print();
+vector2.print();
