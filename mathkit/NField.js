@@ -3,7 +3,10 @@
 @author         : Dahoux Sami
 @created        : 28/04/2018
 @file           : NField.js
-@description    :
+@description    : Class representing a numeric vector field f(u) = f(x1, x2, ..., xp). f output must be a vector.
+                  f(u) = (f1(u), f2(u), ..., fn(u)).
+                  This class is initialized with a JavaScript function representing the point expression of the
+                  function. Used to solve differential equations.
  */
 
 class NField {
@@ -24,10 +27,14 @@ class NField {
         }
     }
 
+    //GETTERS
+
+    //Point value of the field
     value(vector){
         return this.func(vector);
     }
 
+    //Values on a set of point
     values(vectors) {
         let values = new Array(vectors.length);
         for(let k = 0; k < values.length; k++) {
@@ -35,6 +42,7 @@ class NField {
         }
     }
 
+    //Derivative of a vector field : df(v)/dx(k)
     diff(k, vector) {
         let dVector = NVector.canonical(k, this.inputDim).prod(this.h);
         return this.value(vector.cSum(dVector).get(k) - vector.get(k)).cProd(1 / this.h);

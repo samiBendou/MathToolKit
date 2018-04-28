@@ -3,8 +3,8 @@
 @author         : Dahoux Sami
 @created        : 28/04/2018
 @file           : ENVector.js
-@description    : Module inheriting from NVector which represent Euclidian Space vector. Featuring norm based uppon
-                  inner product scalar and distance between two vectors
+@description    : Module inheriting from NVector which represent Euclidean Space vector. Featuring norm based upon
+                  inner product scalar and distance between two vectors.
  */
 
 class ENVector extends NVector {

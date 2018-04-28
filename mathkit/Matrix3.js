@@ -3,7 +3,7 @@
 @author         : Dahoux Sami
 @created        : 28/04/2018
 @file           : Matrix3.js
-@description    :
+@description    : Class representing 3D Matrix. Featuring rotation matrix.
  */
 
 class Matrix3 extends NMatrix {

@@ -3,7 +3,16 @@
 @author         : Dahoux Sami
 @created        : 28/04/2018
 @file           : NMatrix.js
-@description    :
+@description    : Representation of numerical N x N Matrix vector space. Featuring LU decomposition, classic matrix
+                  recognition & generation (lower, upper, diag, eye...), linear systems solving,
+                  matrix inversion and determinant, fast exponentiation...
+
+                  Algebraical operations noted with c (cSum) don't modify calling object and return a copy of the
+                  result of operation. Other operations (sum, ...) store the result in the calling object.
+
+                  Solving & inversion functions noted with lup (lupInv) take in parameters lu decomposition of the calling
+                  matrix. You can get it by using lupDecomposition method. functions such as inv, det, solve calculate
+                  LUP decomposition at each call.
  */
 
 class NMatrix extends NPMatrix {
@@ -49,6 +58,7 @@ class NMatrix extends NPMatrix {
         return true;
     }
 
+    //Trace of a matrix
     trace() {
         let trace = 0.0;
         for(let i = 0; i < this.nRow; i++) {
@@ -57,6 +67,7 @@ class NMatrix extends NPMatrix {
         return trace;
     }
 
+    //Upper part of calling matrix
     upper() {
         let upper = NMatrix.zeros(this.nRow);
         for(let i = 0; i < this.nRow; i++) {
@@ -66,6 +77,7 @@ class NMatrix extends NPMatrix {
             return upper;
         }
 
+    //Lower part of calling matrix
     lower() {
         let lower = NMatrix.zeros(this.nRow);
         for(let i = 0; i < this.nRow; i++) {
@@ -75,8 +87,8 @@ class NMatrix extends NPMatrix {
         return lower;
     }
 
+    //Power of a matrix using fast exponentiation algorithm
     pow(n) {
-        //Fast exponentiation algorithm
         if(n > 1) {
             if(n % 2 === 0) {
                 this.pow(this.prod(this), n / 2);
@@ -96,23 +108,25 @@ class NMatrix extends NPMatrix {
         return res;
     }
 
+    //Inverse of a Square Matrix
     inv() {
         let lu = this.lupDecompositon();
         return this.lupInv(lu);
     }
 
-
-
+    //Determianant of a Square Matrix
     det() {
         let lu = this.lupDecompositon();
         return this.lupDet(lu);
     }
 
+    //Solve THIS * X = b returns X as NVector
     solve(b) {
         let lu = this.lupDecompositon();
         return this.lupSolve(lu, b);
     }
 
+    //LUP decomposition of a Matrix
     lupDecompositon() {
         //Returns PA such as PA = LU where P is a row permutation array and A = L + U;
         let i, j, k, iMax;
@@ -154,6 +168,7 @@ class NMatrix extends NPMatrix {
         }
     }
 
+    //Return L and U matrix
     lupMatrix() {
         let lu = this.lupDecompositon();
         let l = lu.a.lower();
@@ -236,6 +251,7 @@ class NMatrix extends NPMatrix {
         return new NMatrix(NPMatrix.ones(n , n).toArray());
     }
 
+    //Returns Identity Matrix
     static eye(n) {
         let eye = NMatrix.zeros(n);
         for(let i = 0; i < n; i++) {
@@ -244,10 +260,13 @@ class NMatrix extends NPMatrix {
         return eye;
     }
 
+    //Returns a scalar Matrix filled with value
     static scalar(value, n) {
         return NMatrix.diag(Array.apply(null, Array(n)).map(Number.prototype.valueOf, value));
     }
 
+    //Returns a n-scalar Matrix filled with values. If values.length = 2, the matrix is tri-diagonal. and values[1] is
+    //the value of the diagonal.
     static nScalar(values, n) {
         let diags = Array(2 * values.length - 1);
         let size = 1;
@@ -262,6 +281,7 @@ class NMatrix extends NPMatrix {
         return NMatrix.nDiag(diags);
     }
 
+    //Returns diagonal matrix filled with arr Array
     static diag(arr) {
         let dim = arr.length;
         let diag = NMatrix.zeros(dim);
@@ -271,6 +291,8 @@ class NMatrix extends NPMatrix {
         return diag;
     }
 
+    //Returns a n-diagonal matrix filled with arr bi-dimensional array : arr[l] is the values of coefficients of the l-th
+    //diagonal from the left. arr[middle] is the values of coefficients on the diagonal.
     static nDiag(arr) {
         let n = arr.length;
         let middle = (n - 1) / 2;

@@ -6,7 +6,7 @@
 @description    : Representation of a finite dimension numerical vector space. Featuring algebraical operations,
                   setters & getters, swappers and classic vectors generator such as ones, zeros...
 
-                  Algebraical operations noted with c (cSum) don't modify calling object and return a copy of the
+                  Algebraical operations noted with c (cSum, ...) don't modify calling object and return a copy of the
                   result of operation. Other operations (sum) store the result in the calling object.
 
  */
@@ -34,8 +34,8 @@ class NVector {
         return this.val.clone();
     }
 
+    //Hard copy of a vector.
     copy() {
-        //Hard copy of a vector.
         let arr = this.val.clone();
         return new NVector(arr);
     }

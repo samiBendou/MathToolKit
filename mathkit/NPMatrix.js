@@ -3,21 +3,25 @@
 @author         : Dahoux Sami
 @created        : 28/04/2018
 @file           : NPMatrix.js
-@description    :
+@description    : Representation of numerical N x P Matrix vector space. Featuring algebraical operations,
+                  setters & getters, swappers and classic matrix generator such as ones, zeros...
+                  The matrix is stored by rows. Each row of a matrix is a NVector.
+
+                  Algebraical operations noted with c (cSum) don't modify calling object and return a copy of the
+                  result of operation. Other operations (sum, ...) store the result in the calling object.
  */
 
 class NPMatrix {
     constructor(arr) {
-        this.nRow = arr.length;
-        this.nCol = (arr[0].length !== undefined) ? arr[0].length : 1;
-        this.rows   = [];
+        this.nRow = arr.length;                                         //Number of rows in matrix
+        this.nCol = (arr[0].length !== undefined) ? arr[0].length : 1;  //Number of columns in matrix
+        this.rows   = [];                                               //Rows of matrix, array of NVector
 
         for(let i = 0; i < this.nRow; i++) {
-            this.rows.push(new NVector(arr[i].clone()));
+            this.rows.push(new NVector(arr[i].clone())); //Array is hard copied at construction
         }
     }
 
-    //DEBUG
     print() {
         console.log(this.toString());
     }
@@ -31,6 +35,7 @@ class NPMatrix {
         return str;
     }
 
+    //Return JavaScript two-dimensional numeric Array
     toArray() {
         let arr = new Array(this.nRow);
         for(let i = 0; i < this.nRow; i++) {
@@ -42,6 +47,7 @@ class NPMatrix {
         return arr;
     }
 
+    //Hard copy of a matrix.
     copy() {
         let arr = this.toArray();
         return new NPMatrix(arr);
@@ -52,7 +58,7 @@ class NPMatrix {
             this.rows[i].fill(value);
     }
 
-    //CHARACTERIZATION
+    //CHARACTERIZATION OF MATRIX
 
     isSquare() {
         return this.nRow === this.nCol;
@@ -74,6 +80,7 @@ class NPMatrix {
         return this.nRow === matrix.nRow && this.nCol === matrix.nCol;
     }
 
+    //Check if two matrix can be multiplied.
     matchProduct(matrix) {
         if(matrix.nRow !== undefined)
             return this.nCol === matrix.nRow;
@@ -81,7 +88,7 @@ class NPMatrix {
             return this.nCol === matrix.dim;
     }
 
-    //VECTORIAL SPACE OPERATIONS
+    //VECTOR SPACE OPERATIONS (see NVector.js for more details)
     sum(matrix) {
         if(this.matchSize(matrix)) {
             for(let i = 0; i < this.nRow; i++) {
@@ -125,10 +132,10 @@ class NPMatrix {
         return this;
     }
 
-
     //ALEGEBRICAL OPERATIONS
+
+    //Natural O(n2) matrix apply to vector.
     vProd(vector) {
-        //Natural O(n2) matrix apply to vector
         if(this.matchProduct(vector)) {
             let prod = vector.copy();
             prod.fill(0.0);
@@ -141,8 +148,8 @@ class NPMatrix {
         }
     }
 
+    //Natural O(n3) matrices product algorithm.
     mProd(matrix) {
-        //Natural O(n3) matrices product algorithms
         if(this.matchProduct(matrix)) {
             let prod = this.copy();
             prod.fill(0.0);
@@ -157,8 +164,9 @@ class NPMatrix {
         }
     }
 
+    //Product function selector.
     prod(element) {
-        if(element.dim !== undefined) //Element is a vector
+        if(element.dim !== undefined)       //Element is a vector
             this.vProd(element);
         else if(element.nRow !== undefined) //Element is a matrix
             this.mProd(element);
@@ -167,18 +175,19 @@ class NPMatrix {
     }
 
     cProd(element) {
-        if(element.dim !== undefined) {
+        if(element.dim !== undefined) { //Element is a vector
             let res = element.copy();
             this.prod(res);
             return res;
         }
-        else {
+        else {                          //Element is a matrix or a scalar
             let res = this.copy();
             res.prod(element);
             return res;
         }
     }
 
+    //Transpose a matrix
     trans() {
         let trans = this.copy();
         for(let i = 0; i < this.nRow; i++) {
@@ -189,6 +198,8 @@ class NPMatrix {
         return trans;
     }
 
+    //Get a shifted matrix according to Gauss Jordan algorithm.
+    //  Shifted = [THIS | MATRIX] where Shifted is a N x (PThis + PMatrix)
     shifted(matrix) {
         let shifted = NPMatrix.zeros(this.nRow, matrix.nCol + this.nCol);
         for(let i = 0; i < this.nRow; i++) {
@@ -203,8 +214,8 @@ class NPMatrix {
         return shifted;
     }
 
+    //Apply Gauss Jordan elimination algorithm
     reduced() {
-        //Gauss Jordan elimination algorithm
         let reduced = this.copy();
         let r = 0, k, i, j;
         let spin;
@@ -226,7 +237,7 @@ class NPMatrix {
     }
 
 
-    //GETTERS
+    //GETTERS OF MATRIX
     get(i, j) {
         if(this.validIndex(i, j)) {
             return this.rows[i].val[j];
@@ -297,7 +308,7 @@ class NPMatrix {
         return col.maxAbsIndex(r);
     }
 
-    //SETTERS
+    //SETTERS OF MATRIX
     set(i, j, value) {
         if(this.validIndex(i, j)) {
             this.rows[i].val[j] = value;
@@ -346,7 +357,7 @@ class NPMatrix {
         }
     }
 
-    //SWAP & SHIFTS
+    //SWAP, SHIFTS & SUBS
     swap(i1, j1, i2, j2) {
         if(this.validIndex(i1, j1) && this.validIndex(i2, j2)) {
             let temp = this.get(i1 ,j1);
@@ -371,6 +382,8 @@ class NPMatrix {
         }
     }
 
+    //SHIFTS : Shifts a row/column iterations times. If iterations is < 0 than the shift direction changes.
+    //         Else Shift Row moves rows downward and ShiftCol moves columns leftward.
     shiftRow(i, iterations) {
         let n = iterations % this.nRow;
         let temp = this.row(i);

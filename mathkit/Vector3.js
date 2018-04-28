@@ -3,7 +3,16 @@
 @author         : Dahoux Sami
 @created        : 28/04/2018
 @file           : Vector3.js
-@description    : Module inheriting from ENVector
+@description    : Module inheriting from ENVector representing 3D Euclidean space. Featuring cross product, coordinate
+                  transforms and rotations.
+                  - X, Y, Z       : Cartesian coordinates.
+                  - R, THETA, Z   : Cylindrical coordinates.   |R       = RXY = sqrt(x2 + y2),
+                                                               |THETA   = atan(y / x)
+                                                               |Z       = z
+
+                  - R, THETA, PHI : Spherical coordinates.     |R       = sqrt(x2 + y2 + z2),
+                                                               |THETA   = atan(y / x),
+                                                               |PHI     = atan(RXY / Z)
 */
 
 class Vector3 extends ENVector {
@@ -12,7 +21,7 @@ class Vector3 extends ENVector {
         return new Vector3(arr);
     }
 
-    //3D Coordinate getters
+    //3D COORDINATES GETTERS
     x()     {return this.val[0];}
 
     y()     {return this.val[1];}
@@ -21,7 +30,7 @@ class Vector3 extends ENVector {
 
     r()     {return this.norm();}
 
-    rXY()   {return this.x() * this.x() + this.y() * this.y();}
+    rXY()   {return Math.sqrt(this.x() * this.x() + this.y() * this.y());}
 
     theta() {return Math.atan2(this.x(), this.y());}
 
@@ -35,22 +44,22 @@ class Vector3 extends ENVector {
     rThetaPhi() {return new Vector3([this.r(), this.theta(), this.phi()]);}
 
 
-    //3D Coordinates setters
+    //3D COORDINATES SETTERS
     setX(x) {this.val[0] = x;}
 
     setY(y) {this.val[1] = y;}
 
     setZ(z) {this.val[2] = z;}
 
+    setXYZ(x, y, z) {
+        this.val = [x, y, z];
+    }
+
     setR(r) {this.prod(r / this.norm());}
 
     setTheta(theta) {
         let rotationMatrix = Matrix3.rotationZ(-this.theta).prod(Matrix3.rotationZ(theta));
         rotationMatrix.prod(this);
-    }
-
-    setXYZ(x, y, z) {
-        this.val = [x, y, z];
     }
 
     setRThetaZ(r, theta, h) {
@@ -61,7 +70,7 @@ class Vector3 extends ENVector {
         this.val = [r * Math.sin(phi) * Math.cos(theta), Math.sin(phi) * Math.sin(theta), r * Math.cos(phi)]
     }
 
-    //Geometrical Transforms
+    //GEOMETRICAL TRANSFORMATIONS
     rotateX(theta) {
         let rotationMatrix = Matrix3.rotationX(theta);
         rotationMatrix.prod(this);
