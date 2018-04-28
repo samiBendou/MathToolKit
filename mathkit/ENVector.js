@@ -31,15 +31,11 @@ class ENVector extends NVector {
         return new ENVector(arr);
     }
 
-    static zeros(n) {
-        return new ENVector(NVector.zeros(n).toArray());
-    }
+    static zeros(n) {return new ENVector(NVector.zeros(n).toArray());}
 
-    static ones(n) {
-        return new ENVector(NVector.ones(n).toArray());
-    }
+    static ones(n) {return new ENVector(NVector.ones(n).toArray());}
 
-    static scalar(x, n) {
-        return new ENVector(NVector.scalar(x, n).toArray());
-    }
+    static scalar(x, n) {return new ENVector(NVector.scalar(x, n).toArray());}
+
+    static canonical(k, n) {return new ENVector(NVector.canonical(k, n).toArray());}
 }

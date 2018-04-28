@@ -136,30 +136,26 @@ class NPMatrix {
 
     //Natural O(n2) matrix apply to vector.
     vProd(vector) {
-        if(this.matchProduct(vector)) {
-            let prod = vector.copy();
-            prod.fill(0.0);
-            for(let i = 0; i < this.nRow; i++) {
-                for(let k = 0; k < this.nCol; k++) {
-                    prod.val[i] += this.rows[i].val[k] * vector.val[k];
-                }
-            }
-            vector.val = prod.val;
-        }
+        let prod = NPMatrix.zeros(this.nRow, 1);
+        prod.setCol(0, vector);
+        prod = this.cProd(prod);
+
+        vector.dim = prod.nRow;
+        vector.val = prod.col(0).val;
     }
 
-    //Natural O(n3) matrices product algorithm.
     mProd(matrix) {
         if(this.matchProduct(matrix)) {
-            let prod = this.copy();
-            prod.fill(0.0);
-            for(let j = 0; j < this.nCol; j++) {
+            let prod = NPMatrix.zeros(this.nRow, matrix.nCol);
+            for(let j = 0; j < matrix.nCol; j++) {
                 for(let i = 0; i < this.nRow; i++) {
                     for(let k = 0; k < this.nCol; k++) {
                         prod.set(i, j, prod.get(i, j) + this.get(i, k) * matrix.get(k, j));
                     }
                 }
             }
+            this.nRow = prod.nRow;
+            this.nCol = prod.nCol;
             this.rows = prod.rows;
         }
     }
@@ -189,10 +185,10 @@ class NPMatrix {
 
     //Transpose a matrix
     trans() {
-        let trans = this.copy();
+        let trans = NPMatrix.zeros(this.nCol, this.nRow);
         for(let i = 0; i < this.nRow; i++) {
             for(let j = 0; j < this.nCol; j++) {
-                trans.set(i, j, this.get(j, i));
+                trans.set(j, i, this.get(i, j));
             }
         }
         return trans;

@@ -87,6 +87,47 @@ class NMatrix extends NPMatrix {
         return lower;
     }
 
+    //Transpose a matrix
+    trans() {
+        let trans = this.copy();
+        for(let i = 0; i < this.nRow; i++) {
+            for(let j = 0; j < this.nCol; j++) {
+                trans.set(i, j, this.get(j, i));
+            }
+        }
+        return trans;
+    }
+
+    //Natural O(n2) matrix apply to vector.
+    vProd(vector) {
+        if(this.matchProduct(vector)) {
+            let prod = vector.copy();
+            prod.fill(0.0);
+            for(let i = 0; i < this.nRow; i++) {
+                for(let k = 0; k < this.nCol; k++) {
+                    prod.val[i] += this.rows[i].val[k] * vector.val[k];
+                }
+            }
+            vector.val = prod.val;
+        }
+    }
+
+    //Natural O(n3) matrix product algorithm.
+    mProd(matrix) {
+        if(this.matchProduct(matrix)) {
+            let prod = this.copy();
+            prod.fill(0.0);
+            for(let j = 0; j < this.nCol; j++) {
+                for(let i = 0; i < this.nRow; i++) {
+                    for(let k = 0; k < this.nCol; k++) {
+                        prod.set(i, j, prod.get(i, j) + this.get(i, k) * matrix.get(k, j));
+                    }
+                }
+            }
+            this.rows = prod.rows;
+        }
+    }
+
     //Power of a matrix using fast exponentiation algorithm
     pow(n) {
         if(n > 1) {
