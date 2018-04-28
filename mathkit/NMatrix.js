@@ -1,3 +1,11 @@
+/*
+@license        : Dahoux Sami 2018 - © Copyright All Rights Reserved.
+@author         : Dahoux Sami
+@created        : 28/04/2018
+@file           : NMatrix.js
+@description    :
+ */
+
 class NMatrix extends NPMatrix {
     constructor(arr) {
         super(arr);
@@ -247,7 +255,7 @@ class NMatrix extends NPMatrix {
         for(let l = 0; l < values.length; l++) {
             diags[l] = Array.apply(null, Array(size + minSize)).map(Number.prototype.valueOf, values[l]);
             if(l > 0) {
-                diags[l + values.length] = Array.apply(null, Array(n - size + 1)).map(Number.prototype.valueOf, values[values.length - l - 1]);
+                diags[l + values.length - 1] = Array.apply(null, Array(n - size + 1)).map(Number.prototype.valueOf, values[values.length - l - 1]);
             }
             size++;
         }
@@ -271,8 +279,11 @@ class NMatrix extends NPMatrix {
 
         for(let l = -middle; l <= middle; l++) {
             for(let k = 0; k < dim - Math.abs(l); k++) {
-                if(k + l < dim && k + l > 0) {
-                    diag.set(k, k + l, arr[l + middle][k]);
+                if(l < 0) {
+                    diag.set(k - l, k, arr[l + middle][k]);
+                }
+                else {
+                    diag.set(k , k + l, arr[l + middle][k]);
                 }
             }
         }

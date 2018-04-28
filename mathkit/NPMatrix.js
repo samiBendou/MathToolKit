@@ -1,3 +1,11 @@
+/*
+@license        : Dahoux Sami 2018 - © Copyright All Rights Reserved.
+@author         : Dahoux Sami
+@created        : 28/04/2018
+@file           : NPMatrix.js
+@description    :
+ */
+
 class NPMatrix {
     constructor(arr) {
         this.nRow = arr.length;
@@ -5,7 +13,7 @@ class NPMatrix {
         this.rows   = [];
 
         for(let i = 0; i < this.nRow; i++) {
-            this.rows.push(new NVector(arr[i]));
+            this.rows.push(new NVector(arr[i].clone()));
         }
     }
 
@@ -93,14 +101,15 @@ class NPMatrix {
         this.sProd(-1.0);
     }
 
-    sOpp() {
+    cOpp() {
         let res = this.copy();
         res.opp();
         return res;
     }
 
     sub(matrix) {
-        return this.sum(matrix.opp());
+        let newMatrix = matrix.cOpp();
+        this.sum(newMatrix);
     }
 
     cSub(matrix) {
@@ -165,7 +174,7 @@ class NPMatrix {
         }
         else {
             let res = this.copy();
-            this.prod(element);
+            res.prod(element);
             return res;
         }
     }

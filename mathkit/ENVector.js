@@ -1,4 +1,14 @@
+/*
+@license        : Dahoux Sami 2018 - © Copyright All Rights Reserved.
+@author         : Dahoux Sami
+@created        : 28/04/2018
+@file           : ENVector.js
+@description    : Module inheriting from NVector which represent Euclidian Space vector. Featuring norm based uppon
+                  inner product scalar and distance between two vectors
+ */
+
 class ENVector extends NVector {
+
     dot(vector) {
         let dot = 0.0;
         for(let k = 0; k < this.dim; k++) {
@@ -12,12 +22,24 @@ class ENVector extends NVector {
     }
 
     dist(vector) {
-        let dif = this.sub(vector);
-        return new ENVector(dif.toArray()).norm();
+        let dif = this.cSub(vector);
+        return dif.norm();
     }
 
     copy() {
-        let arr = this.val;
+        let arr = this.val.clone();
         return new ENVector(arr);
+    }
+
+    static zeros(n) {
+        return new ENVector(NVector.zeros(n).toArray());
+    }
+
+    static ones(n) {
+        return new ENVector(NVector.ones(n).toArray());
+    }
+
+    static scalar(x, n) {
+        return new ENVector(NVector.scalar(x, n).toArray());
     }
 }
